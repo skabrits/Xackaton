@@ -29,7 +29,7 @@ class CommunistNN:
 
         self.pnn = Stalin3000_anal_probe(5)
         if mode == "test" or mode == "next  train":
-            self.pnn.load_state_dict(torch.load('pnn_weights'))
+            self.pnn.load_state_dict(torch.load('./Analysys/pnn_weights'))
             if mode == "test":
                 self.pnn.eval()
 

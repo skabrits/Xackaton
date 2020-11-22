@@ -25,13 +25,13 @@ def main():
             greeting(event)
             k = 1
             print(event)
+        if event.type == VkBotEventType.MESSAGE_NEW and m == 1:
+            cc(event)
+            m = 0
         if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message['text'] == 'Предположительное качество дороги':
             road(event)
         # if event.type == VkBotEventType.MESSAGE_NEW and event.obj.message['text'] == 'Период ремонта конкретной дороги':
         #     rep(event)
-        if event.type == VkBotEventType.MESSAGE_NEW and m == 1:
-            cc(event)
-            m = 0
 
 
 def greeting(event):
@@ -46,17 +46,23 @@ def road(event):
     global m
     vk = vk_session.get_api()
     vk.messages.send(user_id=event.obj.message['from_id'],
-                         message='Введите параметры',
+                         message='Введите параметры, разделяя пробелами',
                          random_id=random.randint(0, 2 ** 64), keyboard=keyboard)
     m = 1
 
 
 def cc(event):
     vk = vk_session.get_api()
-    cat = Analysys.lenin_trainer.calcit(event.obj.message['text'])
-    vk.messages.send(user_id=event.obj.message['from_id'],
-                     message=cat,
-                     random_id=random.randint(0, 2 ** 64), keyboard=keyboard)
+    try:
+        ia = list(map(lambda x:float(x), str(event.obj.message['text']).split(" ")))
+        cat = Analysys.lenin_trainer.calcit(ia[0],ia[1],ia[2],ia[3],ia[4])
+        vk.messages.send(user_id=event.obj.message['from_id'],
+                         message=cat,
+                         random_id=random.randint(0, 2 ** 64), keyboard=keyboard)
+    except ValueError as e:
+        vk.messages.send(user_id=event.obj.message['from_id'],
+                         message='Неправильно введены параметры. Введите параметры, разделяя пробелами',
+                         random_id=random.randint(0, 2 ** 64), keyboard=keyboard)
 
 
 # def rep(event):
