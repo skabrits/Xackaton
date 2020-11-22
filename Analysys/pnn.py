@@ -20,10 +20,10 @@ class Stalin3000_anal_probe(nn.Module):
 
     def forward(self, x):
         for _ in range(self.n // 3):
-            x = F.dropout(F.relu(self.bf2(self.insider(x))), p=0.3)
+            x = F.dropout(F.relu(self.bnf2(self.insider(x))), p=0.3)
             for _ in range(self.n//2):
-                x = F.dropout(F.relu(self.bf1(self.hl1(x))), p=0.5)
-                x = F.dropout(F.relu(self.bf2(self.hl2(x))), p=0.5)
+                x = F.dropout(F.relu(self.bnf1(self.hl1(x))), p=0.5)
+                x = F.dropout(F.relu(self.bnf2(self.hl2(x))), p=0.5)
             x = F.dropout(F.relu(self.bf3(self.hl3(x))), p=0.3)
             x = F.dropout(F.relu(self.hl4(x)), p=0.3)
         x = F.dropout(F.relu(self.outsider(x)), p=0.2)
