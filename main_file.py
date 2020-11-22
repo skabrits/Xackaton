@@ -63,6 +63,10 @@ def cc(event):
         vk.messages.send(user_id=event.obj.message['from_id'],
                          message='Неправильно введены параметры. Введите параметры, разделяя пробелами',
                          random_id=random.randint(0, 2 ** 64), keyboard=keyboard)
+    except IndexError as e:
+        vk.messages.send(user_id=event.obj.message['from_id'],
+                         message='Неправильно введены параметры. Введите параметры 5 штук чисел, разделяя пробелами',
+                         random_id=random.randint(0, 2 ** 64), keyboard=keyboard)
 
 
 # def rep(event):
