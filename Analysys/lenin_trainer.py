@@ -115,6 +115,27 @@ def calcit(p1,p2=0,p3=0,p4=0,p5=0):
 def train_nn(table, values_predicted):
     CommunistNN(table, values_predicted, mode="next train")
 
+def clast (table, values_predicted):
+    from math import *
+    def ro(a, b, c, d):  # расстояние
+        return sqrt((a - c) * (a - c) + (b - d) * (b - d))
+
+    N = [table[i].insert(0,values_predicted[i]) for i in range(len(values_predicted))]  # потом сюда добавить ввод данных, 1 символ в каждой строчке массива - время, которое продержалась дорога(сейчас тут значения для теста)
+    N1 = [[] for _ in range(len(N))]
+    s = 0
+    for i in range(len(N)):
+        N1[i].append(N[i][0])
+        for j in range(len(N[0]) - 1):
+            s += N[i][j + 1]  # здесь можно вставлять разные хеш функции, я беру просто сложение
+        N1[i].append(s)
+        s = 0
+    print(N1)
+    N2 = [[] for _ in range(len(N1))]
+    for i in range(len(N1)):
+        for j in range(len(N1)):
+            N2[i].append(ro(N1[i][0], N1[i][1], N1[j][0], N1[j][1]))
+    return N2
+
 
 if __name__ ==  "__main__":
     mat = list()
