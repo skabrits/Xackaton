@@ -51,7 +51,7 @@ class CommunistNN:
                 optimizer.zero_grad()
 
                 # forward + backward + optimize
-                y_pred = pnn(X_batch.float())
+                y_pred = pnn(X_batch.view(5,1))
                 # print(y_batch, "\n\n", y_pred)
                 loss = loss_fn(y_pred, y_batch)
                 loss.backward()
@@ -99,4 +99,4 @@ if __name__ ==  "__main__":
         for row in reader:
             mat.append([float(row['Temperature (K)']),float(row['Luminosity(L/Lo)']),float(row['Radius(R/Ro)']),float(row['Star type']),0,float(row['Absolute magnitude(Mv)'])])
     # pprint.pprint(np.array(mat)[:,-1:])
-    CommunistNN(np.array(mat,dtype=float)[:,:-1],np.array(mat,dtype=float)[:,-1:])
+    CommunistNN(np.array(mat,dtype="float32")[:,:-1],np.array(mat,dtype="float32")[:,-1:])
