@@ -19,6 +19,7 @@ keyboard = str(keyboard.decode('utf-8'))
 
 def main():
     global k
+    global m
     for event in longpoll.listen():
         if event.type == VkBotEventType.MESSAGE_NEW and k == 0:
             greeting(event)
@@ -30,6 +31,7 @@ def main():
         #     rep(event)
         if event.type == VkBotEventType.MESSAGE_NEW and m == 1:
             cc(event)
+            m = 0
 
 
 def greeting(event):

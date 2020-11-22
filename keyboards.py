@@ -7,15 +7,7 @@ KEYBOARD = {
             "action": {
                 "type": "text",
                 "payload": json.dumps(''),
-                "label": "Узнать предположительное качество дороги"
-            },
-            "color": "primary"
-        }],
-        [{
-            "action": {
-                "type": "text",
-                "payload": json.dumps(''),
-                "label": "Узнать период ремонта конкретной дороги"
+                "label": "Предположительное качество дороги"
             },
             "color": "primary"
         }]

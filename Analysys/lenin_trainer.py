@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 import pprint
+from math import *
 BS = 4
 
 
@@ -24,13 +25,7 @@ class NumDs(utils_data.Dataset):
 
 class CommunistNN:
 
-    def __init__(self, input_data, outputdata, mode="train"):
-
-        trainset = NumDs(input_data[:-len(input_data)//4], outputdata[:-len(input_data)//4])
-        trainloader = utils_data.DataLoader(trainset, batch_size=BS, shuffle=True, num_workers=2)
-
-        testset = NumDs(input_data[-len(input_data)//4:], outputdata[-len(input_data)//4:])
-        testloader = utils_data.DataLoader(testset, batch_size=BS, shuffle=False, num_workers=2)
+    def __init__(self, input_data=None, outputdata=None, mode="train"):
 
         self.pnn = Stalin3000_anal_probe(5)
         if mode == "test" or mode == "next  train":
@@ -38,7 +33,12 @@ class CommunistNN:
             if mode == "test":
                 self.pnn.eval()
 
-        if  mode != "test":
+        if mode != "test":
+            trainset = NumDs(input_data[:-len(input_data) // 4], outputdata[:-len(input_data) // 4])
+            trainloader = utils_data.DataLoader(trainset, batch_size=BS, shuffle=True, num_workers=2)
+
+            testset = NumDs(input_data[-len(input_data) // 4:], outputdata[-len(input_data) // 4:])
+            testloader = utils_data.DataLoader(testset, batch_size=BS, shuffle=False, num_workers=2)
             loss_fn = torch.nn.MSELoss()
 
             # выбираем алгоритм оптимизации и learning_rate
@@ -108,15 +108,14 @@ class CommunistNN:
         return res
 
 def calcit(p1,p2=0,p3=0,p4=0,p5=0):
-    Stalin_with_probe = CommunistNN(np.array(mat, dtype="float32")[:, :-1], np.array(mat, dtype="float32")[:, -1:],
-                                    mode="test")
+    Stalin_with_probe = CommunistNN(mode="test")
     return float(Stalin_with_probe.eval_single([p1, p2, p3, p4, p5])[0][0])
 
 def train_nn(table, values_predicted):
     CommunistNN(table, values_predicted, mode="next train")
 
 def clast (table, values_predicted):
-    from math import *
+
     def ro(a, b, c, d):  # расстояние
         return sqrt((a - c) * (a - c) + (b - d) * (b - d))
 

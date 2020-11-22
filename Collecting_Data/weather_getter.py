@@ -1,25 +1,59 @@
 import requests
 res = requests.get("https://msk.nuipogoda.ru/апрель-2019")
 k = res.text
-ind1 = k.find("<tbody class=\"tbody-forecast\"><tr>")#выделение строки с данными о месяце
-ind2 = k.find("</table></div>",ind1,len(k))
-#print(k[ind1:ind2])
-data1 = []#гроза, облачно, ...
-data2 = []#температура
-s = k[ind1:ind2]#строка с данными
-i1 = -1
-i2 = -1
-r = 1
-i = 0
-while(r==1):
-        i1 = s.find("<td time=",i1+1,len(s))
-        i2 = s.find("</a></td>",i2+1,len(s))
-        if i1!=-1:
-            s1 = s[i1:i2]#строка содержащая инфу об одном дне
-            #print(s1)
-            indata1 = s1.find("title=")
-            indata2 = s1.find(">",indata1,len(s1))
-            data1.append(s1[indata1+7:indata2-1])
-            #print(data1)
-        if i1==-1: r = 0
-print(data1)
+import requests
+yearnow = 2020#сегодняшняя дата
+monthnow = 11#сегодняшняя дата
+numyear = 2020#начиная с
+rain = []#осадки список
+temp = []#температура список
+url = "http://www.pogodaiklimat.ru/monitor.php?id=27612&month=1&year=2020"# нужно будет убрать, конечно
+#Это вычисляет адрес страницы:
+while (numyear<=yearnow):
+    strnumyear = str(numyear)
+    if numyear==yearnow:
+        tr = monthnow+1
+    else:
+        tr = 12
+    for i in range(1,tr):
+        nummonth = i
+        strnummonth = str(nummonth)
+        url1 = "&month="+ strnummonth
+        url2 = "&year="+ strnumyear
+        url = "http://www.pogodaiklimat.ru/monitor.php?id=27612"+url1+url2
+        res = requests.get(url)
+        #штука для поиска циферок, -, + в строке:
+        setnum = set()
+        setnum = {'1','2','3','4','5','6','7','8','9','-','+','0'}
+        if res.status_code==200:
+            k = res.text
+            #print(k)
+            ind1 = k.find("<td>1</td>")
+            ind2 = k.find("</table>",ind1)
+            if ind1>=ind2:
+                print('error,no data')
+            else:
+                s = k[ind1:ind2]#строка с мусором и данными
+                #print(s)
+                ind = 0
+                lasso = 0 # счетчик от 0 до 6: число, мин .температура, ср. температура ..., осадки
+                data2 = []#осадки
+                data1 = []#ср. температура
+                indi = 0
+                while indi<len(s):
+                    if lasso == 6:
+                        lasso = 0
+                    if (s[indi]=='-'and s[indi+1] in setnum) or (s[indi]!='-' and s[indi] in setnum):
+                        lasso+=1
+                        num = ''
+                        while s[indi]!='<':
+                            num = num+s[indi]
+                            indi+=1
+                        if lasso==3:
+                            data1.append(float(num))
+                        elif lasso==6:
+                            data2.append(float(num))
+                    indi+=1
+        temp.append(data1)
+        rain.append(data2)
+    numyear += 1
