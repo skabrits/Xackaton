@@ -42,13 +42,13 @@ class CommunistNN:
             loss_fn = torch.nn.MSELoss()
 
             # выбираем алгоритм оптимизации и learning_rate
-            learning_rate = 1e-3
-            optimizer = torch.optim.Adam(self.pnn.parameters(), lr=learning_rate,weight_decay=5e-4)
+            learning_rate = 5e-2
+            optimizer = torch.optim.Adam(self.pnn.parameters(), lr=learning_rate,weight_decay=5e-3)
             # pprint.pprint(list(self.pnn.parameters()))
             losses = []
 
             # итерируемся
-            for epoch in notebook.tqdm(range(50)):
+            for epoch in notebook.tqdm(range(40)):
                 self.pnn.train()
                 running_loss = 0.0
                 for i, batch in enumerate(notebook.tqdm(trainloader)):
@@ -107,6 +107,15 @@ class CommunistNN:
             res = self.pnn(torch.Tensor(x).float().unsqueeze(0))
         return res
 
+def calcit(p1,p2=0,p3=0,p4=0,p5=0):
+    Stalin_with_probe = CommunistNN(np.array(mat, dtype="float32")[:, :-1], np.array(mat, dtype="float32")[:, -1:],
+                                    mode="test")
+    return float(Stalin_with_probe.eval_single([p1, p2, p3, p4, p5])[0][0])
+
+def train_nn(table, values_predicted):
+    CommunistNN(table, values_predicted, mode="next train")
+
+
 if __name__ ==  "__main__":
     mat = list()
     with open('test_data.csv', newline='') as csvfile:
@@ -117,5 +126,5 @@ if __name__ ==  "__main__":
     # mat = list(zip(list(range(1,1000)),list(range(4000,3001,-1)),list(range(10,10000,10)),list(range(1001,2000)),list(map(lambda x: 0,range(1,1000))),list(map(lambda x: x[0]*x[1]*x[2]*x[3],zip(list(range(1,1000)),list(range(4000,3001,-1)),list(range(10,10000,10)),list(range(1001,2000)),list(map(lambda x: 0,range(1,1000))))))))
     # pprint.pprint(mat)
     Stalin_with_probe = CommunistNN(np.array(mat,dtype="float32")[:,:-1],np.array(mat,dtype="float32")[:,-1:], mode="train")
-    pprint.pprint(Stalin_with_probe.eval_single([3068, 0.0024, 0.17, 0, 1]))
+    pprint.pprint(float(Stalin_with_probe.eval_single([3068, 0.0024, 0.17, 0, 1])[0][0]))
     # pprint.pprint(list(Stalin_with_probe.pnn.parameters()))
